@@ -1,6 +1,8 @@
 // Copyright Ben Tristem 2016.
 
 #include "BuildingEscape.h"
+#include "Components/SceneComponent.h"
+#include "Math/Quat.h"
 #include "Grabber.h"
 
 #define OUT
@@ -40,12 +42,20 @@ void UGrabber::SetupInputComponent()
 	{
 		InputComponent->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
 		InputComponent->BindAction("Grab", IE_Released, this, &UGrabber::Release);
+		InputComponent->BindAction("Impulse", IE_Pressed, this, &UGrabber::Impulse);
 	}
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("%s missing input component"), *GetOwner()->GetName())
 	}
 }
+
+void UGrabber::Impulse()
+{
+	if (!PhysicsHandle->GrabbedComponent) { return; };
+	PhysicsHandle->GrabbedComponent->AddImpulse(LaunchForce * GetOwner()->GetActorForwardVector(), NAME_None, true);
+	Release();
+};
 
 // Called every frame
 void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)

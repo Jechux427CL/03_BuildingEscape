@@ -21,11 +21,15 @@ public:
 	// Called every frame
 	virtual void TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction ) override;
 
-
-
-private:
+	UPROPERTY(EditAnywhere, Category = "Grab")
 	// How far ahead of the player can we reach in cm
 	float Reach = 100.f;
+
+	UPROPERTY(EditAnywhere, Category = "Impulse")
+		float LaunchForce = 200.f;
+
+private:
+
 	
 	UPhysicsHandleComponent* PhysicsHandle = nullptr;
 
@@ -42,6 +46,9 @@ private:
 
 	// Setup (assumed) attached input component
 	void SetupInputComponent();
+
+	// Set an impulse
+	void Impulse();
 
 	// Return hit for first physics body in reach
 	const FHitResult GetFirstPhysicsBodyInReach();
